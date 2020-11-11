@@ -17,14 +17,18 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+//	TODO: Uncomment when integrated with some kind of database. TBD.
+//	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
 	// external
-	implementation("com.squareup.okhttp3:okhttp:4.9.0")
+	implementation("com.squareup.retrofit2:retrofit:2.9.0")
+	implementation("com.squareup.retrofit2:converter-jackson:2.9.0")
+	implementation("com.squareup.okhttp3:logging-interceptor")
+	implementation("io.github.microutils:kotlin-logging:1.12.0")
 
 	// test
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
