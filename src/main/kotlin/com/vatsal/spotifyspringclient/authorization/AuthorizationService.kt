@@ -1,7 +1,8 @@
 package com.vatsal.spotifyspringclient.authorization
 
+import com.vatsal.spotifyspringclient.common.Tokens
 import com.vatsal.spotifyspringclient.common.exception.SpotifyAPIException
-import com.vatsal.spotifyspringclient.integration.spotify.SpotifyAuthApiClient
+import com.vatsal.spotifyspringclient.integration.spotify.AuthorizationApiClient
 import com.vatsal.spotifyspringclient.integration.spotify.TokenResponse
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
@@ -10,7 +11,7 @@ import java.util.*
 
 @Service
 class AuthorizationService(
-	private val spotifyAuthApiClient: SpotifyAuthApiClient,
+	private val authorizationApiClient: AuthorizationApiClient,
 	@Value("\${spotify.client-id}") private val clientId: String,
 	@Value("\${spotify.client-secret}") private val clientSecret: String,
 	@Value("\${spotify.authorization.redirect-uri}") private val redirectURI: String,
@@ -24,7 +25,7 @@ class AuthorizationService(
 
 		logger.debug { "state set = $state" }
 
-		val response = spotifyAuthApiClient.authorize(
+		val response = authorizationApiClient.authorize(
 			clientId = clientId,
 			redirectURI = redirectURI,
 			state = state,
@@ -62,7 +63,7 @@ class AuthorizationService(
 
 			logger.debug { "Fetching tokens." }
 
-			val response = spotifyAuthApiClient.getToken(
+			val response = authorizationApiClient.getTokens(
 				authorization = clientIdAndSecretInBase64,
 				code = it,
 				redirectURI = redirectURI
@@ -80,8 +81,51 @@ class AuthorizationService(
 
 			logger.info { "Fetching tokens was successful." }
 
+			setTokens(body)
+
 			return body
 		}
+	}
+
+	fun refreshAccessToken(): TokenResponse {
+		val refreshToken = checkNotNull(Tokens.refreshToken) {
+			"Refresh token is not set."
+		}
+
+		val clientIdAndSecretInBase64 = "Basic ${getClientIdAndSecretInBase64()}"
+		val response = authorizationApiClient.getAccessToken(
+			authorization = clientIdAndSecretInBase64,
+			refreshToken = refreshToken
+		).execute()
+
+		if(!response.isSuccessful) {
+			val responseCode = response.code()
+			val errorResponse = response.errorBody()?.string()
+			throw SpotifyAPIException("Fetch token request failed. Code=[$responseCode] Error=[$errorResponse]")
+		}
+
+		val body = checkNotNull(response.body()) {
+			"Response body should not be null."
+		}
+
+		// Updates access token only since refresh token would be null
+		setTokens(body)
+
+		return body
+	}
+
+	private fun setTokens(body: TokenResponse) {
+		logger.info { "Updating Tokens. Previous token values:\n" +
+			"accessToken: ${Tokens.accessToken}\n" +
+			"refreshToken: ${Tokens.refreshToken}\n" }
+
+		Tokens.accessToken = body.accessToken
+		Tokens.refreshToken = body.refreshToken ?: Tokens.refreshToken
+		Tokens.isTokenSet = true
+
+		logger.info { "New token values:\n" +
+			"accessToken: ${Tokens.accessToken}\n" +
+			"refreshToken: ${Tokens.refreshToken}\n" }
 	}
 
 	private fun getClientIdAndSecretInBase64(): String {

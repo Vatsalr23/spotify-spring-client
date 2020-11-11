@@ -1,6 +1,6 @@
 package com.vatsal.spotifyspringclient.config
 
-import com.vatsal.spotifyspringclient.integration.spotify.SpotifyAuthApiClient
+import com.vatsal.spotifyspringclient.integration.spotify.AuthorizationApiClient
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.springframework.beans.factory.annotation.Value
@@ -29,8 +29,8 @@ class SpotifyClientConfig(
 	}
 
 	@Bean
-	fun spotifyAuthClient(retrofit: Retrofit): SpotifyAuthApiClient {
-		return retrofit.create(SpotifyAuthApiClient::class.java)
+	fun spotifyAuthClient(retrofit: Retrofit): AuthorizationApiClient {
+		return retrofit.create(AuthorizationApiClient::class.java)
 	}
 
 }

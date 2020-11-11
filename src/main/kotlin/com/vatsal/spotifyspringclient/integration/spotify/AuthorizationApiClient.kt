@@ -9,7 +9,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface SpotifyAuthApiClient {
+interface AuthorizationApiClient {
 
 	@GET("authorize")
 	fun authorize(
@@ -22,10 +22,18 @@ interface SpotifyAuthApiClient {
 
 	@FormUrlEncoded
 	@POST("api/token")
-	fun getToken(
+	fun getTokens(
 		@Header("Authorization") authorization: String,
 		@Field("grant_type") grantType: String = "authorization_code",
 		@Field("code") code: String,
 		@Field("redirect_uri") redirectURI: String
+	): Call<TokenResponse>
+
+	@FormUrlEncoded
+	@POST("api/token")
+	fun getAccessToken(
+		@Header("Authorization") authorization: String,
+		@Field("grant_type") grantType: String = "refresh_token",
+		@Field("refresh_token") refreshToken: String
 	): Call<TokenResponse>
 }
