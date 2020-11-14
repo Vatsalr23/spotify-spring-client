@@ -1,4 +1,4 @@
-package com.vatsal.spotifyspringclient.integration.spotify
+package com.vatsal.spotifyspringclient.integration.spotify.authorization
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty

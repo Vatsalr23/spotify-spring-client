@@ -1,4 +1,4 @@
-package com.vatsal.spotifyspringclient.integration.spotify
+package com.vatsal.spotifyspringclient.integration.spotify.authorization
 
 import okhttp3.ResponseBody
 import retrofit2.Call
