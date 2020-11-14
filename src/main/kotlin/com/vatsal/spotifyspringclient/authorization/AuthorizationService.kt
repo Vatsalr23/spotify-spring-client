@@ -2,8 +2,8 @@ package com.vatsal.spotifyspringclient.authorization
 
 import com.vatsal.spotifyspringclient.common.Tokens
 import com.vatsal.spotifyspringclient.common.exception.SpotifyAPIException
-import com.vatsal.spotifyspringclient.integration.spotify.AuthorizationApiClient
-import com.vatsal.spotifyspringclient.integration.spotify.TokenResponse
+import com.vatsal.spotifyspringclient.integration.spotify.authorization.AuthorizationApiClient
+import com.vatsal.spotifyspringclient.integration.spotify.authorization.TokenResponse
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
