@@ -1,6 +1,5 @@
 package com.vatsal.spotifyspringclient.playlist
 
-import com.vatsal.spotifyspringclient.authorization.AuthorizationService
 import com.vatsal.spotifyspringclient.integration.spotify.playlist.PlaylistApiClient
 import com.vatsal.spotifyspringclient.integration.spotify.playlist.PlaylistResponse
 import mu.KLogging
@@ -8,8 +7,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class PlaylistService(
-	private val playlistApiClient: PlaylistApiClient,
-	private val authorizationService: AuthorizationService
+	private val playlistApiClient: PlaylistApiClient
 ){
 
 	companion object: KLogging()
